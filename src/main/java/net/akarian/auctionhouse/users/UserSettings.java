@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -150,7 +151,8 @@ public class UserSettings {
                             sounds = rs.getBoolean(9);
                         }
 
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
+                        throw new RuntimeException();
                     }
                 });
 
@@ -165,8 +167,10 @@ public class UserSettings {
         switch (AuctionHouse.getInstance().getDatabaseType()) {
             case MYSQL:
                 Bukkit.getScheduler().runTaskAsynchronously(AuctionHouse.getInstance(), () -> {
+                    PreparedStatement statement = null;
                     try {
-                        PreparedStatement statement = mySQL.getConnection().prepareStatement("UPDATE " + mySQL.getUsersTable() + " SET USERNAME=?,ALERT_CREATE=?,OPEN_ADMIN=?,ALERT_NEAR_EXPIRE=?,ALERT_NEAR_EXPIRE_TIME=?,LISTING_BOUGHT=?,AUTO_CONFIRM=?,SOUNDS=? WHERE ID=?");
+                        statement = mySQL.getConnection().prepareStatement("UPDATE " + mySQL.getUsersTable() + " SET USERNAME=?,ALERT_CREATE=?,OPEN_ADMIN=?,ALERT_NEAR_EXPIRE=?,ALERT_NEAR_EXPIRE_TIME=?,LISTING_BOUGHT=?,AUTO_CONFIRM=?,SOUNDS=? WHERE ID=?");
+
 
                         statement.setString(1, name);
                         statement.setBoolean(2, alertCreateListings);
@@ -180,7 +184,9 @@ public class UserSettings {
 
                         statement.executeUpdate();
                         statement.closeOnCompletion();
-                    } catch (Exception ignored) {
+                    }
+                    catch (SQLException e) {
+                        throw new RuntimeException(e);
                     }
                 });
                 break;

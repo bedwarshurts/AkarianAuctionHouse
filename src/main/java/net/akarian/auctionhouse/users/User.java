@@ -66,6 +66,7 @@ public class User {
                     try {
                         PreparedStatement statement = mySQL.getConnection().prepareStatement("SELECT USERNAME FROM " + mySQL.getUsersTable() + " WHERE ID=?");
                         statement.setString(1, uuid.toString());
+                        statement.setString(2, getUsername());
                         ResultSet rs = statement.executeQuery();
 
                         if (rs.next()) {

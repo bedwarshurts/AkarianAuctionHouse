@@ -87,9 +87,12 @@ public final class AuctionHouse extends JavaPlugin {
         loaded = false;
 
         getLogger().log(Level.INFO, "Loading Akarian Auction House v" + getDescription().getVersion() + "...");
+        getLogger().log(Level.INFO, "Forked by bedwarshurts");
+
         instance = this;
         this.fileManager = new FileManager(this);
         this.configFile = new Configuration();
+
         chat = new Chat(this, getConfigFile().getPrefix());
         configFile.checkVersion();
         chat.log("ChatManager Successfully Loaded", debug);
@@ -97,23 +100,30 @@ public final class AuctionHouse extends JavaPlugin {
         floodgate = Bukkit.getPluginManager().isPluginEnabled("floodgate");
         chat.log(floodgate ? "Floodgate found and enabled" : "Floodgate not found and disabled", debug);
         chat.log("Loading NameManager...", debug);
+
         nameManager = new NameManager();
         chat.log("NameManager Successfully Loaded", debug);
         chat.log("Loading Messages...", debug);
+
         this.messageManager = new MessageManager(this);
         chat.log("Messages Successfully Loaded", debug);
+
         chat.log("Loading MySQL...", debug);
         mySQL = new MySQL();
         chat.log("MySQL Successfully Loaded", debug);
+
+        updateManager = new UpdateManager(this);
         chat.log("Loading UpdateManager...", debug);
         update = getConfigFile().isUpdates();
-        updateManager = new UpdateManager(this);
         chat.log("UpdateManager Successfully Loaded", debug);
-        chat.log("Loading GUIManager...", debug);
+
         guiManager = new GUIManager();
+        chat.log("Loading GUIManager...", debug);
         chat.log("GUIManager Successfully Loaded", debug);
-        chat.log("Loading CooldownManager...", debug);
+
         cooldownManager = new CooldownManager();
+        chat.log("Loading CooldownManager...", debug);
+
         getLogger().log(Level.INFO, "Setting up Economy...");
         if (!setupEconomy()) {
             chat.alert("&cAuctionHouse has failed to detect an economy. The plugin is now disabling");

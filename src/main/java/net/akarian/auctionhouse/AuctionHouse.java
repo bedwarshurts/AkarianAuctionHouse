@@ -85,8 +85,7 @@ public final class AuctionHouse extends JavaPlugin {
     @Override
     public void onEnable() {
         loaded = false;
-        getLogger().log(Level.INFO, "========== Akarian Auction House ==========");
-        getLogger().log(Level.INFO, " ");
+
         getLogger().log(Level.INFO, "Loading Akarian Auction House v" + getDescription().getVersion() + "...");
         instance = this;
         this.fileManager = new FileManager(this);
@@ -96,10 +95,7 @@ public final class AuctionHouse extends JavaPlugin {
         chat.log("ChatManager Successfully Loaded", debug);
         chat.log("Checking for Floodgate...", debug);
         floodgate = Bukkit.getPluginManager().isPluginEnabled("floodgate");
-        if (floodgate)
-            chat.log("Floodgate found and enabled", debug);
-        else
-            chat.log("Floodgate not found and disabled", debug);
+        chat.log(floodgate ? "Floodgate found and enabled" : "Floodgate not found and disabled", debug);
         chat.log("Loading NameManager...", debug);
         nameManager = new NameManager();
         chat.log("NameManager Successfully Loaded", debug);
@@ -155,17 +151,19 @@ public final class AuctionHouse extends JavaPlugin {
         }
         getLogger().log(Level.INFO, "Loading listings...");
         this.listingManager = new ListingManager();
+
         listingManager.startup();
         getLogger().log(Level.INFO, "Listings loaded successfully.");
         getLogger().log(Level.INFO, "Loading users...");
         this.userManager = new UserManager();
         getLogger().log(Level.INFO, "Users loaded successfully.");
+
         getLogger().log(Level.INFO, "Loading layouts...");
         layoutManager = new LayoutManager();
         registerCommands();
         registerEvents();
 
-        if (getServer().getPluginManager().getPlugin("Citizens") != null && getServer().getPluginManager().getPlugin("Citizens").isEnabled()) {
+        if (getServer().getPluginManager().getPlugin("Citizens") != null && Objects.requireNonNull(getServer().getPluginManager().getPlugin("Citizens")).isEnabled()) {
             try {
                 net.citizensnpcs.api.CitizensAPI.getTraitFactory().registerTrait(net.citizensnpcs.api.trait.TraitInfo.create(AuctionHouseTrait.class));
             } catch (IllegalArgumentException ex) {
@@ -182,7 +180,7 @@ public final class AuctionHouse extends JavaPlugin {
         metrics.addCustomChart(new Metrics.SingleLineChart("expired_listings", () -> listingManager.getExpired().size()));
         metrics.addCustomChart(new Metrics.SingleLineChart("completed_listings", () -> listingManager.getCompleted().size()));
         metrics.addCustomChart(new Metrics.SimplePie("database_type", () -> databaseType.getStr()));
-        getLogger().log(Level.INFO, "=================================================");
+
         loaded = true;
     }
 

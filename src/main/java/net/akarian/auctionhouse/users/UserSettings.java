@@ -56,7 +56,21 @@ public class UserSettings {
             case MYSQL:
                 Bukkit.getScheduler().runTaskAsynchronously(AuctionHouse.getInstance(), () -> {
                     try {
-                        PreparedStatement statement = mySQL.getConnection().prepareStatement("INSERT INTO " + mySQL.getUsersTable() + " (ID,USERNAME,ALERT_CREATE,OPEN_ADMIN,ALERT_NEAR_EXPIRE,ALERT_NEAR_EXPIRE_TIME,LISTING_BOUGHT,AUTO_CONFIRM,SOUNDS) VALUES (?,?,?,?,?,?,?,?,?)");
+                        // Check if the user already exists
+                        PreparedStatement checkStmt = mySQL.getConnection().prepareStatement("SELECT COUNT(*) FROM " + mySQL.getUsersTable() + " WHERE ID=?");
+                        checkStmt.setString(1, user.getUuid().toString());
+                        ResultSet rsCheck = checkStmt.executeQuery();
+                        boolean exists = rsCheck.next() && rsCheck.getInt(1) > 0;
+                        checkStmt.close();
+
+                        PreparedStatement statement;
+                        if (exists) {
+                            // Update existing user
+                            statement = mySQL.getConnection().prepareStatement("UPDATE " + mySQL.getUsersTable() + " SET USERNAME=?,ALERT_CREATE=?,OPEN_ADMIN=?,ALERT_NEAR_EXPIRE=?,ALERT_NEAR_EXPIRE_TIME=?,LISTING_BOUGHT=?,AUTO_CONFIRM=?,SOUNDS=? WHERE ID=?");
+                        } else {
+                            // Insert new user
+                            statement = mySQL.getConnection().prepareStatement("INSERT INTO " + mySQL.getUsersTable() + " (ID,USERNAME,ALERT_CREATE,OPEN_ADMIN,ALERT_NEAR_EXPIRE,ALERT_NEAR_EXPIRE_TIME,LISTING_BOUGHT,AUTO_CONFIRM,SOUNDS) VALUES (?,?,?,?,?,?,?,?,?)");
+                        }
 
                         statement.setString(1, user.getUuid().toString());
                         statement.setString(2, name);
@@ -67,9 +81,9 @@ public class UserSettings {
                         statement.setBoolean(7, AuctionHouse.getInstance().getConfigFile().isDps_bought());
                         statement.setBoolean(8, AuctionHouse.getInstance().getConfigFile().isDps_autoConfirm());
                         statement.setBoolean(9, AuctionHouse.getInstance().getConfigFile().isDps_sounds());
-
                         statement.executeUpdate();
-                        statement.closeOnCompletion();
+                        statement.close();
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -136,8 +150,7 @@ public class UserSettings {
                             sounds = rs.getBoolean(9);
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
                     }
                 });
 
@@ -167,8 +180,7 @@ public class UserSettings {
 
                         statement.executeUpdate();
                         statement.closeOnCompletion();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
                     }
                 });
                 break;

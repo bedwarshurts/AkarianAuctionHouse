@@ -30,6 +30,7 @@ public class User {
         this.uuid = uuid;
         this.fm = AuctionHouse.getInstance().getFileManager();
         adminMode = false;
+        this.userSettings = new UserSettings(this).create();
     }
 
     public UserSettings createUserSettings() {
@@ -40,21 +41,25 @@ public class User {
 
         switch (AuctionHouse.getInstance().getDatabaseType()) {
             case FILE:
-                YamlConfiguration usersFile = fm.getConfig("/database/users");
-                if (!usersFile.isConfigurationSection(uuid.toString())) {
-                    userSettings = createUserSettings().load();
-                } else {
-                    userSettings = new UserSettings(this).load();
-                }
+                try {
+                    YamlConfiguration usersFile = fm.getConfig("/database/users");
+                    if (!usersFile.isConfigurationSection(uuid.toString())) {
+                        userSettings = createUserSettings().load();
+                    } else {
+                        userSettings = new UserSettings(this).load();
+                    }
 
-                if (!username.equals(getUsername())) {
-                    final String oldUsername = getUsername();
-                    setUsername(username);
-                    getUserSettings().saveUsername();
-                    AuctionHouse.getInstance().getChat().log("Saved new username for " + uuid + " - New: " + getUsername() + " Old: " + oldUsername, AuctionHouse.getInstance().isDebug());
+                    if (!username.equals(getUsername())) {
+                        final String oldUsername = getUsername();
+                        setUsername(username);
+                        getUserSettings().saveUsername();
+                        AuctionHouse.getInstance().getChat().log("Saved new username for " + uuid + " - New: " + getUsername() + " Old: " + oldUsername, AuctionHouse.getInstance().isDebug());
+                    }
+                    break;
                 }
+                catch (Exception ignored) {
 
-                break;
+                }
             case MYSQL:
                 MySQL mySQL = AuctionHouse.getInstance().getMySQL();
                 Bukkit.getScheduler().runTaskAsynchronously(AuctionHouse.getInstance(), () -> {
@@ -76,8 +81,7 @@ public class User {
                             AuctionHouse.getInstance().getChat().log("Saved new username for " + uuid + " - New: " + getUsername() + " Old: " + oldUsername, AuctionHouse.getInstance().isDebug());
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
                     }
                 });
         }

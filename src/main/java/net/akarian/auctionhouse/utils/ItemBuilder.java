@@ -7,33 +7,43 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-/**
- * Created by KaYoz on 8/7/2017.
- * Subscribe to me on Youtube:
- * http://www.youtube.com/c/KaYozMC/
- */
 
 public class ItemBuilder {
 
-    public static ItemStack build(Material material, int amount, String name, List<String> lore, String... settings) {
+    public static @NotNull ItemStack build(Material material, int amount, String name, List<String> lore, String... settings) {
         ItemStack item = new ItemStack(material, amount);
         ItemMeta meta = item.getItemMeta();
-        meta.setLore(AuctionHouse.getInstance().getChat().formatList(lore));
+        Objects.requireNonNull(meta).setLore(AuctionHouse.getInstance().getChat().formatList(lore));
         meta.setDisplayName(AuctionHouse.getInstance().getChat().format(name));
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
         for(String s : settings) {
             switch (s) {
-                case "shine":
-                    item.addUnsafeEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-                    break;
                 case "hide_attributes":
                 case "h_a":
                     meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                    break;
+                case "hide_enchants":
+                case "h_e":
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    break;
+                case "hide_potion_effects":
+                case "h_pe":
+                    meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+                    break;
+                case "unbreakable":
+                case "u":
+                    meta.setUnbreakable(true);
+                    break;
+                case "glow":
+                    meta.addEnchant(Enchantment.DURABILITY, 1, true);
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     break;
             }
             if (s.contains("uuid_")) {

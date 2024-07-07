@@ -32,7 +32,6 @@ public class DiscordWebhook {
     public DiscordWebhook(String url) {
         this.url = url;
     }
-
     public void setContent(String content) {
         this.content = content;
     }

@@ -28,7 +28,6 @@ public class AdminCommandManager {
         commands.put("edit", new EditSubCommand("edit", "auctionhouse.admin.edit", "/aha edit", "Edit the Auction House"));
         commands.put("blacklist", new BlacklistSubCommand("blacklist", "auctionhouse.admin.blacklist", "/aha blacklist", "Manage the Auction House Blacklist."));
         commands.put("messages", new MessagesSubCommand("messages", "auctionhouse.admin.messages", "/aha messages", "Edit the Auction House Messages.", "message"));
-
     }
 
     public AkarianCommand find(String command) {

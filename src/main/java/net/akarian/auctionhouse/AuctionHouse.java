@@ -233,7 +233,6 @@ public final class AuctionHouse extends JavaPlugin {
     public void onDisable() {
         if (!loaded) {
             zipLog();
-            getLogger().log(Level.INFO, "=================================================");
             return;
         }
         listingManager.cancelExpireTimer();

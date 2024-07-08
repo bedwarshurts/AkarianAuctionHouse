@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitTask;
 import org.geysermc.floodgate.api.FloodgateApi;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -36,7 +37,7 @@ public class NameManager {
      * @param uuid The UUID of a player.
      * @return The name of the given player.
      */
-    public String getName(UUID uuid) {
+    public String getName(@NotNull UUID uuid) {
         return getName(uuid.toString());
     }
 

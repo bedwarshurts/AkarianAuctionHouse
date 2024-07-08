@@ -44,13 +44,7 @@ public class AuctionHouseAdminGUI implements AkarianInventory {
                     break;
                 case 12:
                     if(player.hasPermission("auctionhouse.admin.database")) {
-                        if (AuctionHouse.getInstance().getMySQL().getTransferring() == null) {
                             player.openInventory(new MainDatabaseGUI(player).getInventory());
-                        } else if (AuctionHouse.getInstance().getMySQL().getTransferring().equals(player.getUniqueId())) {
-                            player.openInventory(new DatabaseTransferStatusGUI(player).getInventory());
-                        } else {
-                            chat.sendMessage(player, "&cThe database transfer has been initialized by " + Bukkit.getOfflinePlayer(AuctionHouse.getInstance().getMySQL().getTransferring()).getName() + ".");
-                        }
                     }
                     break;
                 case 14:
@@ -60,7 +54,7 @@ public class AuctionHouseAdminGUI implements AkarianInventory {
                     break;
                 case 16:
                     if(player.hasPermission("auctionhouse.admin.reload")) {
-                        if (clickType.isRightClick() && clickType.isShiftClick()) {
+                        if (clickType.isRightClick()) {
                             player.closeInventory();
                             player.performCommand("aha reload");
                         }

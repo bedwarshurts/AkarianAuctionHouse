@@ -13,7 +13,6 @@ import net.akarian.auctionhouse.events.aahEvents.ListingBoughtEvents;
 import net.akarian.auctionhouse.guis.admin.edit.LayoutEditGUI;
 import net.akarian.auctionhouse.layouts.LayoutManager;
 import net.akarian.auctionhouse.listings.ListingManager;
-import net.akarian.auctionhouse.updater.UpdateManager;
 import net.akarian.auctionhouse.users.UserManager;
 import net.akarian.auctionhouse.utils.*;
 import net.akarian.auctionhouse.utils.messages.MessageManager;
@@ -58,9 +57,6 @@ public final class AuctionHouse extends JavaPlugin {
     private FileManager fileManager;
     @Getter
     private GUIManager guiManager;
-    @Getter
-    private UpdateManager updateManager;
-    @Getter
     @Setter
     private boolean update;
     @Getter
@@ -111,11 +107,6 @@ public final class AuctionHouse extends JavaPlugin {
         chat.log("Loading MySQL...", debug);
         mySQL = new MySQL();
         chat.log("MySQL Successfully Loaded", debug);
-
-        updateManager = new UpdateManager(this);
-        chat.log("Loading UpdateManager...", debug);
-        update = getConfigFile().isUpdates();
-        chat.log("UpdateManager Successfully Loaded", debug);
 
         guiManager = new GUIManager();
         chat.log("Loading GUIManager...", debug);

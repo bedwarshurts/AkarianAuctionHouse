@@ -163,6 +163,7 @@ public final class AuctionHouse extends JavaPlugin {
 
         getLogger().log(Level.INFO, "Loading layouts...");
         layoutManager = new LayoutManager();
+        getLogger().log(Level.INFO, "Layouts loaded successfully");
         registerCommands();
         registerEvents();
 

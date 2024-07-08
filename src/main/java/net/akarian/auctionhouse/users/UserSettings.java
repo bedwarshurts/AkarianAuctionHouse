@@ -85,8 +85,7 @@ public class UserSettings {
                         statement.executeUpdate();
                         statement.close();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
                     }
                 });
                 break;

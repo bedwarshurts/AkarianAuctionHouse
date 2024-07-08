@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.akarian.auctionhouse.AuctionHouse;
 import net.akarian.auctionhouse.guis.AuctionHouseGUI;
 import net.akarian.auctionhouse.guis.SortType;
+import net.akarian.auctionhouse.guis.admin.blacklist.BlacklistAdminGUI;
 import net.akarian.auctionhouse.guis.admin.blacklist.BlacklistMainGUI;
 import net.akarian.auctionhouse.guis.admin.database.MainDatabaseGUI;
 import net.akarian.auctionhouse.guis.admin.database.transfer.DatabaseTransferStatusGUI;
@@ -77,7 +78,13 @@ public class AuctionHouseAdminGUI implements AkarianInventory {
                     break;
                 case 30:
                     if (player.hasPermission("auctionhouse.admin.blacklist")) {
-                        player.openInventory(new BlacklistMainGUI(player).getInventory());
+                        if (!(player.getInventory().getItemInMainHand().toString().equals(Material.AIR.toString()))) {
+                            player.openInventory(new BlacklistAdminGUI(player.getInventory().getItemInMainHand()).getInventory());
+                            }
+                        else {
+                            chat.sendMessage(player, "&cYou must be holding an item in your hand to add to the blacklist.");
+                            return;
+                        }
                     }
                     break;
                 case 32:

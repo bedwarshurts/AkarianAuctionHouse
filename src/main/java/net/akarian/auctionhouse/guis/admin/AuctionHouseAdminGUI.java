@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.akarian.auctionhouse.AuctionHouse;
 import net.akarian.auctionhouse.guis.AuctionHouseGUI;
 import net.akarian.auctionhouse.guis.SortType;
+import net.akarian.auctionhouse.guis.admin.blacklist.BlacklistAdminGUI;
 import net.akarian.auctionhouse.guis.admin.blacklist.BlacklistMainGUI;
 import net.akarian.auctionhouse.guis.admin.database.MainDatabaseGUI;
 import net.akarian.auctionhouse.guis.admin.database.transfer.DatabaseTransferStatusGUI;
@@ -33,71 +34,70 @@ public class AuctionHouseAdminGUI implements AkarianInventory {
 
     @Override
     public void onGUIClick(Inventory inventory, Player player, int slot, ItemStack itemStack, ClickType clickType) {
-        switch (slot) {
-            case 8:
-                player.closeInventory();
-                break;
-            case 10:
-                if(player.hasPermission("auctionhouse.admin.npc")) {
-                    player.openInventory(new NPCAdminGUI(player, 1).getInventory());
-                }
-                break;
-
-            case 12:
-                if(player.hasPermission("auctionhouse.admin.database")) {
-                    if (AuctionHouse.getInstance().getMySQL().getTransferring() == null) {
-                        player.openInventory(new MainDatabaseGUI(player).getInventory());
-                        break;
+            switch (slot) {
+                case 8:
+                    player.closeInventory();
+                    break;
+                case 10:
+                    if(player.hasPermission("auctionhouse.admin.npc")) {
+                        player.openInventory(new NPCAdminGUI(player, 1).getInventory());
                     }
-                    if (AuctionHouse.getInstance().getMySQL().getTransferring().toString().equalsIgnoreCase(player.getUniqueId().toString())) {
-                        player.openInventory(new DatabaseTransferStatusGUI(player).getInventory());
-                    } else {
-                        chat.sendMessage(player, "&cThe database transfer has been initialized by " + Bukkit.getOfflinePlayer(AuctionHouse.getInstance().getMySQL().getTransferring()).getName() + ".");
+                    break;
+                case 12:
+                    if(player.hasPermission("auctionhouse.admin.database")) {
+                            player.openInventory(new MainDatabaseGUI(player).getInventory());
                     }
-                }
-                break;
-            case 14:
-                if(player.hasPermission("auctionhouse.admin.manage")) {
-                    player.openInventory(new AuctionHouseGUI(player, SortType.TIME_LEFT, true, 1).adminMode().getInventory());
-                }
-                break;
-            case 16:
-                if(player.hasPermission("auctionhouse.admin.reload")) {
-                    if (clickType.isRightClick() && clickType.isShiftClick()) {
-                        player.closeInventory();
-                        player.performCommand("aha reload");
+                    break;
+                case 14:
+                    if(player.hasPermission("auctionhouse.admin.manage")) {
+                        player.openInventory(new AuctionHouseGUI(player, SortType.TIME_LEFT, true, 1).adminMode().getInventory());
                     }
-                }
-                break;
-            case 20:
-                if (player.hasPermission("auctionhouse.admin.settings")) {
-                    player.openInventory(new MainSettingsGUI().getInventory());
-                }
-                break;
-            case 22:
-                if (player.hasPermission("auctionhouse.admin.sounds")) {
-                    player.openInventory(new MainSoundGUI(player).getInventory());
-                }
-                break;
-            case 24:
-                if (player.hasPermission("auctionhouse.admin.edit")) {
-                    player.openInventory(new LayoutSelectGUI(player, 1).getInventory());
-                }
-            case 30:
-                if (player.hasPermission("auctionhouse.admin.blacklist")) {
-                    player.openInventory(new BlacklistMainGUI(player).getInventory());
-                }
-                break;
-            case 32:
-                if (player.hasPermission("auctionhouse.admin.messages")) {
-                    player.openInventory(new MainMessageGUI().getInventory());
-                }
-                break;
+                    break;
+                case 16:
+                    if(player.hasPermission("auctionhouse.admin.reload")) {
+                        if (clickType.isRightClick()) {
+                            player.closeInventory();
+                            player.performCommand("aha reload");
+                        }
+                    }
+                    break;
+                case 20:
+                    if (player.hasPermission("auctionhouse.admin.settings")) {
+                        player.openInventory(new MainSettingsGUI().getInventory());
+                    }
+                    break;
+                case 22:
+                    if (player.hasPermission("auctionhouse.admin.sounds")) {
+                        player.openInventory(new MainSoundGUI(player).getInventory());
+                    }
+                    break;
+                case 24:
+                    if (player.hasPermission("auctionhouse.admin.edit")) {
+                        player.openInventory(new LayoutSelectGUI(player, 1).getInventory());
+                    }
+                    break;
+                case 30:
+                    if (player.hasPermission("auctionhouse.admin.blacklist")) {
+                        if (!(player.getInventory().getItemInMainHand().toString().equals(Material.AIR.toString()))) {
+                            player.openInventory(new BlacklistAdminGUI(player.getInventory().getItemInMainHand()).getInventory());
+                            }
+                        else {
+                            chat.sendMessage(player, "&cYou must be holding an item in your hand to add to the blacklist.");
+                            return;
+                        }
+                    }
+                    break;
+                case 32:
+                    if (player.hasPermission("auctionhouse.admin.messages")) {
+                        player.openInventory(new MainMessageGUI().getInventory());
+                    }
+                    break;
+            }
         }
-    }
 
     @Override
     public void updateInventory() {
+        inv = getInventory();
 
     }
 

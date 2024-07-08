@@ -19,7 +19,6 @@ public class AdminCommandManager {
         instance = this;
 
         commands.put("help", new HelpSubCommand("help", "auctionhouse.admin.help", "/aha help", "Displays Admin Commands.", "h"));
-        commands.put("update", new UpdateSubCommand("update", "auctionhouse.admin.update", "/aha update [enable/disable/toggle]", "Manage the AuctionHouse updater.", "u"));
         commands.put("database", new DatabaseSubCommand("database", "auctionhouse.admin.database", "/aha database", "Manage the AuctionHouse database.", "db"));
         commands.put("reload", new ReloadSubCommand("reload", "auctionhouse.admin.reload", "/aha reload [messages/config]", "Reload the AuctionHouse files.", "rl"));
         commands.put("settings", new SettingsSubCommand("settings", "auctionhouse.admin.settings", "/aha settings", "Manage the default player and server settings."));

@@ -51,7 +51,7 @@ public class UserSettings {
     }
 
     public UserSettings create() {
-        String name = AuctionHouse.getInstance().getNameManager().getName(user.getUuid());
+        String name = AuctionHouse.getInstance().getNameManager().getName(user.getUuid().toString());
         MySQL mySQL = AuctionHouse.getInstance().getMySQL();
         switch (AuctionHouse.getInstance().getDatabaseType()) {
             case MYSQL:
@@ -74,7 +74,7 @@ public class UserSettings {
                         }
 
                         statement.setString(1, user.getUuid().toString());
-                        statement.setString(2, name);
+                        statement.setString(2, getUser().getUsername());
                         statement.setBoolean(3, AuctionHouse.getInstance().getConfigFile().isDps_create());
                         statement.setBoolean(4, AuctionHouse.getInstance().getConfigFile().isDps_adminMode());
                         statement.setBoolean(5, AuctionHouse.getInstance().getConfigFile().isDps_expire());
@@ -85,8 +85,7 @@ public class UserSettings {
                         statement.executeUpdate();
                         statement.close();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ignored) {
                     }
                 });
                 break;

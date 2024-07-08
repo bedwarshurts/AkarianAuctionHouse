@@ -10,15 +10,16 @@ import net.akarian.auctionhouse.cooldowns.CooldownManager;
 import net.akarian.auctionhouse.events.*;
 import net.akarian.auctionhouse.events.aahEvents.AdminEditEvents;
 import net.akarian.auctionhouse.events.aahEvents.ListingBoughtEvents;
+import net.akarian.auctionhouse.guis.admin.database.MainDatabaseGUI;
 import net.akarian.auctionhouse.guis.admin.edit.LayoutEditGUI;
 import net.akarian.auctionhouse.layouts.LayoutManager;
 import net.akarian.auctionhouse.listings.ListingManager;
-import net.akarian.auctionhouse.updater.UpdateManager;
 import net.akarian.auctionhouse.users.UserManager;
 import net.akarian.auctionhouse.utils.*;
 import net.akarian.auctionhouse.utils.messages.MessageManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -58,9 +59,6 @@ public final class AuctionHouse extends JavaPlugin {
     private FileManager fileManager;
     @Getter
     private GUIManager guiManager;
-    @Getter
-    private UpdateManager updateManager;
-    @Getter
     @Setter
     private boolean update;
     @Getter
@@ -111,11 +109,6 @@ public final class AuctionHouse extends JavaPlugin {
         chat.log("Loading MySQL...", debug);
         mySQL = new MySQL();
         chat.log("MySQL Successfully Loaded", debug);
-
-        updateManager = new UpdateManager(this);
-        chat.log("Loading UpdateManager...", debug);
-        update = getConfigFile().isUpdates();
-        chat.log("UpdateManager Successfully Loaded", debug);
 
         guiManager = new GUIManager();
         chat.log("Loading GUIManager...", debug);
@@ -170,6 +163,7 @@ public final class AuctionHouse extends JavaPlugin {
 
         getLogger().log(Level.INFO, "Loading layouts...");
         layoutManager = new LayoutManager();
+        getLogger().log(Level.INFO, "Layouts loaded successfully");
         registerCommands();
         registerEvents();
 
@@ -209,7 +203,6 @@ public final class AuctionHouse extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new AuctionHouseGUIEvents(), this);
         pm.registerEvents(new ExpireJoinEvent(), this);
-        pm.registerEvents(new UpdateJoinEvent(), this);
         pm.registerEvents(new ListingCreateEvents(), this);
         pm.registerEvents(new ListingBoughtEvents(), this);
         pm.registerEvents(new UserEvents(), this);
@@ -233,7 +226,6 @@ public final class AuctionHouse extends JavaPlugin {
     public void onDisable() {
         if (!loaded) {
             zipLog();
-            getLogger().log(Level.INFO, "=================================================");
             return;
         }
         listingManager.cancelExpireTimer();

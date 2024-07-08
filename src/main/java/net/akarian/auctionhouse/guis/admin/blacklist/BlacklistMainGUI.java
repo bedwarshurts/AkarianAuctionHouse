@@ -36,9 +36,8 @@ public class BlacklistMainGUI implements AkarianInventory {
                 p.openInventory(new AuctionHouseAdminGUI().getInventory());
                 break;
             case 11:
-                ItemStack hand = p.getInventory().getItemInMainHand();
-                if (hand != null)
-                    p.openInventory(new BlacklistAdminGUI(hand).getInventory());
+                if (!(p.getInventory().getItemInMainHand().equals(Material.AIR)))
+                    p.openInventory(new BlacklistAdminGUI(p.getInventory().getItemInMainHand()).getInventory());
                 else {
                     chat.sendMessage(p, "&cYou must be holding an item in your hand to add to the blacklist.");
                     return;
@@ -55,10 +54,9 @@ public class BlacklistMainGUI implements AkarianInventory {
     @Override
     public void updateInventory() {
 
-        inv.setItem(11, ItemBuilder.build(player.getInventory().getItemInMainHand() == null ? Material.STONE : player.getInventory().getItemInMainHand().getType(), 1, "&6Add to the Blacklist", Collections.singletonList("&7Click to add an item to the blacklist.")));
-        inv.setItem(15, ItemBuilder.build(Material.BOOKSHELF, 1, "&6View and Edit the Blacklist", Collections.singletonList("&7Click to view or remove an item from the blacklist.")));
-
-    }
+            inv.setItem(11, ItemBuilder.build(player.getInventory().getItemInMainHand().getType(), 1, "&6Add to the Blacklist", Collections.singletonList("&7Click to add an item to the blacklist.")));
+            inv.setItem(15, ItemBuilder.build(Material.BOOKSHELF, 1, "&6View and Edit the Blacklist", Collections.singletonList("&7Click to view or remove an item from the blacklist.")));
+        }
 
     @NotNull
     @Override
